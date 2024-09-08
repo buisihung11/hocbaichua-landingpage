@@ -2,11 +2,11 @@
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useState } from 'react'
-import { BackgroundBeams } from './ui/background-beams'
 import { ReloadIcon } from '@radix-ui/react-icons'
+import { useState } from 'react'
 import { toast } from 'sonner'
-import { Facebook, Instagram } from 'lucide-react'
+import FacebookLink from './socials/facebook-link'
+import { BackgroundBeams } from './ui/background-beams'
 
 export function MagicUiLanding() {
   const [email, setEmail] = useState('')
@@ -17,12 +17,12 @@ export function MagicUiLanding() {
     setLoading(true) // Start loading
 
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL!, {
+      const response = await fetch('/api/joinWaitingList', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: new URLSearchParams({ email })
+        body: JSON.stringify({ email })
       })
 
       const result = await response.json()
@@ -79,14 +79,7 @@ export function MagicUiLanding() {
       <div className="flex flex-col items-center absolute bottom-0 p-4">
         <p className="text-neutral-500 text-sm">Theo dõi chúng mình tại</p>
         <div className="flex justify-center items-center mt-4">
-          <a
-            href="https://www.facebook.com/profile.php?id=61565280790925&mibextid=LQQJ4d"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mr-4"
-          >
-            <Facebook className="w-6 h-6 text-blue-500" />
-          </a>
+          <FacebookLink />
         </div>
       </div>
       <BackgroundBeams />

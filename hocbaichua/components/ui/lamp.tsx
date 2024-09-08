@@ -23,7 +23,6 @@ export default function LampDemo() {
     </LampContainer>
   );
 }
-
 export const LampContainer = ({
   children,
   className,
@@ -38,32 +37,10 @@ export const LampContainer = ({
   return (
     <div
       className={cn(
-        "relative flex min-h-screen flex-col items-center justify-center overflow-hidden w-full rounded-md z-0",
-        isDarkMode ? "bg-slate-950" : "bg-slate-100",
+        "relative flex min-h-screen flex-col items-center justify-center overflow-hidden w-full rounded-md z-0 bg-slate-950",
         className
       )}
     >
-      <div className="absolute top-4 right-4 z-50">
-        <motion.button
-          onClick={onToggleMode}
-          className={cn(
-            "w-12 h-12 rounded-full flex items-center justify-center",
-            isDarkMode ? "bg-orange-400" : "bg-slate-800"
-          )}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <motion.div
-            className={cn(
-              "w-6 h-6 rounded-full",
-              isDarkMode ? "bg-slate-950" : "bg-orange-400"
-            )}
-            layout
-            transition={{ type: "spring", stiffness: 700, damping: 30 }}
-          />
-        </motion.button>
-      </div>
-      
       <div className="relative flex w-full flex-1 scale-y-125 items-center justify-center isolate z-0">
         <motion.div
           initial={{ opacity: 0.5, width: "40vw" }}

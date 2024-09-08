@@ -2,29 +2,44 @@
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { LampContainer } from './ui/lamp'
-import ShinyButton from './magicui/shiny-button'
-import { useTheme } from 'next-themes'
 import { BackgroundBeams } from './ui/background-beams'
-
-const words = `Công cụ toàn diện giúp người học có thể tiếp thu kiến thức một
-              cách nhanh chóng, hiệu quả nhờ sự hỗ trợ của AI`
-  .split(' ')
-  .map((word) => ({
-    text: word
-    // className: "text-white",
-  }))
+import { ReloadIcon } from '@radix-ui/react-icons'
+import { toast } from 'sonner'
+import { Facebook, Instagram } from 'lucide-react'
 
 export function MagicUiLanding() {
   const [email, setEmail] = useState('')
-  const { setTheme, theme } = useTheme()
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Email submitted:', email)
-    setEmail('')
+    setLoading(true) // Start loading
+
+    try {
+      const response = await fetch(process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL!, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({ email })
+      })
+
+      const result = await response.json()
+      setLoading(false)
+      if (result.result === 'success') {
+        console.log('Email submitted successfully:', result.email)
+        setEmail('')
+        toast.success('Tham gia thành công 🌼')
+      } else {
+        console.error('Error submitting email:', result)
+        toast.error('Có lỗi khi tham gia, vui lòng thử lại sau')
+      }
+    } catch (error) {
+      console.error('Error submitting email:', error)
+      toast.error('Có lỗi khi tham gia, vui lòng thử lại sau')
+      setLoading(false)
+    }
   }
 
   return (
@@ -33,30 +48,46 @@ export function MagicUiLanding() {
         <h1 className="relative z-10 text-4xl md:text-7xl  bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-600  text-center font-sans font-bold">
           Hocbaichua.com
         </h1>
-        <p className="text-neutral-500 max-w-lg mx-auto my-4 text-sm text-center relative z-10">
+        <p className="text-neutral-500 max-w-lg mx-auto my-4 text-lg text-center relative z-10">
           Công cụ toàn diện giúp người học có thể tiếp thu kiến thức một cách
           nhanh chóng, hiệu quả nhờ sự hỗ trợ của AI
         </p>
 
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto"
+          className="flex flex-col sm:flex-row gap-4 max-w-sm mx-auto"
         >
           <Input
             type="email"
-            placeholder="Enter your email"
+            placeholder="Nhập email của bạn"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             className="bg-white/10 border-white/20 text-white placeholder-gray-400"
+            autoComplete="email"
           />
           <Button
             type="submit"
             className="bg-white text-black hover:bg-gray-200"
+            disabled={loading} // Disable button while loading
           >
-            Join Waitlist
+            {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+            Đăng ký
           </Button>
         </form>
+      </div>
+      <div className="flex flex-col items-center absolute bottom-0 p-4">
+        <p className="text-neutral-500 text-sm">Theo dõi chúng mình tại</p>
+        <div className="flex justify-center items-center mt-4">
+          <a
+            href="https://www.facebook.com/profile.php?id=61565280790925&mibextid=LQQJ4d"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mr-4"
+          >
+            <Facebook className="w-6 h-6 text-blue-500" />
+          </a>
+        </div>
       </div>
       <BackgroundBeams />
     </div>

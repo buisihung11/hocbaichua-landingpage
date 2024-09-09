@@ -1,6 +1,7 @@
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from "@/components/ui/sonner"
 import type { Metadata } from 'next'
+import { Analytics } from "@vercel/analytics/react"
 import localFont from 'next/font/local'
 import './globals.css'
 
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Analytics />
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
